@@ -21,8 +21,8 @@ Route::get('auth-login', function (Request $request) {
     return response()->json(['error' => 'Authorization'], 401);
 })->name('auth-login');
 
-Route::middleware(['cors','auth:api'])->prefix('files')->group(function () {
-    Route::post('/upload', 'Api\UploadController@saveFileWithBase64');
+Route::middleware(['cors','auth:api'])->prefix('information')->group(function () {
+    Route::post('/file/up', 'Api\UserFileController@saveFile');
 });
 
 //gestion des messages

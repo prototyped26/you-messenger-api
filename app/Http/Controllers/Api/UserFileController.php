@@ -9,10 +9,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-class UploadController extends Controller
+class UserFileController extends Controller
 {
     //
-    public function saveFileWithBase64(Request $request) {
+    public function saveFile(Request $request) {
         $input = $request->all();
 
         $base64Image = $input['file'];
