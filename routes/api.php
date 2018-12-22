@@ -21,13 +21,13 @@ Route::get('auth-login', function (Request $request) {
     return response()->json(['error' => 'Authorization'], 401);
 })->name('auth-login');
 
-Route::middleware(['cors','auth:api'])->prefix('file')->group(function () {
-    Route::post('/uplaoad', 'API\UploadController@saveFileWithBase64');
+Route::middleware(['cors','auth:api'])->prefix('files')->group(function () {
+    Route::post('/upload', 'Api\UploadController@saveFileWithBase64');
 });
 
 //gestion des messages
 Route::middleware(['cors','auth:api'])->prefix('messages')->group(function () {
-    Route::post('/send', 'API\MessageController@store');
+    Route::post('/send', 'Api\MessageController@store');
 });
 /// les méthodes utilisateurs
 Route::middleware(['cors'])->prefix('account')->group(function () {
@@ -36,8 +36,9 @@ Route::middleware(['cors'])->prefix('account')->group(function () {
 }); 
 
 Route::middleware(['cors','auth:api'])->prefix('users')->group(function () {
-    Route::get('/other', 'API\UserController@otherUsers');
+    Route::get('/other', 'Api\UserController@otherUsers');
     Route::get('/me', 'Api\UserController@me');
+    Route::post('/update', 'Api\UserController@update');
 });
 
 //// FIN ////////////////////////////
@@ -49,10 +50,10 @@ Route::middleware(['cors', 'auth:api'])->group(function () {
 
 Route::middleware(['cors'])->prefix('langues')->group(function () {
     Route::get('/', 'Api\LangueController@list');
-    Route::get('/{id}', 'API\LangueController@detail');
+    Route::get('/{id}', 'Api\LangueController@detail');
 
-    Route::post('/', 'API\LangueController@store');
-    Route::post('/{id}', 'API\LangueController@update');
+    Route::post('/', 'Api\LangueController@store');
+    Route::post('/{id}', 'Api\LangueController@update');
 
-    Route::delete('/{id}', 'API\LangueController@delete');
+    Route::delete('/{id}', 'Api\LangueController@delete');
 });

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Lcobucci\JWT\Parser;
+Use \Illuminate\Database\QueryException;
 
 class UserController extends Controller
 {
@@ -80,12 +81,19 @@ class UserController extends Controller
         ]);
         try {
             $input = $request->all(['telephone', 'nom', 'prenom', 'photo', 'pseudo', 'langue_id']);
-            $input['password'] = bcrypt($input['password']);
+           
+            $local = User::where('telephone', '=', $input['telephone'])->where('nom', '=', $input['nom'])->get();
 
-            User::where('id', '=', $input['id'])->update($input);
-            $user = User::find($input['id']);
+            if (sizeof($local) > 0) {
+                $id = $local[0]->id;
+                User::where('id', '=', $id)->update($input);
+                $user = User::find($id);
 
-            return response()->json($user, 200);
+                return response()->json($user, 200);
+            } else {
+                return response()->json("Erreur, utilisateur non spécifique !", 400);
+            }
+
 
         } catch (QueryException $e) {
             return response()->json(['error' => $e->getMessage()], 400);

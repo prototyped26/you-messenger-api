@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
@@ -18,31 +19,41 @@ class UploadController extends Controller
         $format = $input['format'];
         $type = $input['type'];
 
-        $filename =  Str::random(60) .'.'. $format;
+        //$filename =  Str::random(60) .'.'. ($type == 'image' ? 'jpg' :  $format);
+        $filename =  Str::random(60) .'.'.  $format;
 
-        $encoded_image = explode(",", $base64Image)[1];
+        //$encoded_image = explode(",", $base64Image)[1];
+        $encoded_image = $base64Image;
         $decoded_image = base64_decode($encoded_image);
 
 
         try {
             switch ($type) {
                 case 'image' :
-                    $fileInput = "resources/images/".$filename;
+                    $fileInput = "data/images/".$filename;
                     break;
                 case 'video':
-                    $fileInput = "resources/videos/".$filename;
+                    $fileInput = "data/videos/".$filename;
                     break;
                 case 'document':
-                    $fileInput = "resources/documents/".$filename;
+                    $fileInput = "data/documents/".$filename;
                     break;
                 case 'audio':
-                    $fileInput = "resources/audios/".$filename;
+                    $fileInput = "data/audios/".$filename;
                     break;
                 default:
-                    $fileInput = "resources/images/".$filename;
+                    $fileInput = "data/images/".$filename;
             }
 
-            file_put_contents('' .$fileInput,$decoded_image);
+            //$localPaht = asset($fileInput);
+           $localPaht = ($fileInput);
+            // http://192.168.43.97/
+           // $localPaht = str_replace('http://192.168.43.97/', '', $localPaht);
+            //  $localPaht = str_replace('http://localhost:8000/', '', $localPaht);
+            //$localPaht = str_replace('public', 'resources', $localPaht);
+            
+            file_put_contents('' . $localPaht ,$decoded_image);
+            //Storage::put('' .$fileInput , $contents);
 
             $fichier = new Fichier(['type' => $type, 'url' => $fileInput, 'nom' => $filename]);
             $fichier->save();
