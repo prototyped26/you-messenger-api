@@ -17,10 +17,9 @@ class UserController extends Controller
 
     public function login(Request $request) {
         // $input['password'] = $input['telephone'];
-        return response()->json( request('telephone'), $this->publicSuccessStatus);
+        // return response()->json( request('telephone'), $this->publicSuccessStatus);
         if( Auth::attempt(['telephone' => request('telephone'), 'password' => request('telephone')])) {
-            $input['password'] = bcrypt($input['telephone']);
-            $user = User::create($input);
+           
             // $user = Auth::user();
             //$token= $user->createToken('TutsForWeb')->accessToken;
             $token = auth()->user()->createToken('Get Access to API methods')->accessToken;
