@@ -8,6 +8,8 @@ class Cors
 {
     /**
      * Handle an incoming request.
+     * 
+     * ->header('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With, Application');
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -17,6 +19,7 @@ class Cors
     {
         return $next($request)
             ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Methods', '*');
+            ->header('Access-Control-Allow-Methods', '*')
+            ->header('Access-Control-Allow-Headers', '*');
     }
 }
