@@ -41,6 +41,9 @@ class UserFileController extends Controller
                 case 'audio':
                     $fileInput = "data/audios/".$filename;
                     break;
+                case 'profile':
+                    $fileInput = "data/images/".$filename;
+                    break;
                 default:
                     $fileInput = "data/images/".$filename;
             }
@@ -57,6 +60,12 @@ class UserFileController extends Controller
 
             $fichier = new Fichier(['type' => $type, 'url' => $fileInput, 'nom' => $filename]);
             $fichier->save();
+
+            if (type == 'profile') {
+               $user = $request->user();
+               $user->photo = asset(''.$fileInput);
+               $user->save();
+            }
 
             return response()->json([
                 'success'=> [

@@ -65,6 +65,8 @@ class UserController extends Controller
             $messageError = '';
             if ($e->errorInfo['1'] == 1062) {
                 $messageError = "User already exist please change informations and retry !";
+                // $user = User::where('telephone', '=', $input['password'])->get();
+                return response()->json($messageError, 400);
             } else {
                 $messageError = $e->getMessage();
             }
