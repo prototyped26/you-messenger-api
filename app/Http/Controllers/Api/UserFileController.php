@@ -61,7 +61,7 @@ class UserFileController extends Controller
             $fichier = new Fichier(['type' => $type, 'url' => $fileInput, 'nom' => $filename]);
             $fichier->save();
 
-            if (type == 'profile') {
+            if ($type == 'profile') {
                $user = $request->user();
                $user->photo = asset(''.$fileInput);
                $user->save();
