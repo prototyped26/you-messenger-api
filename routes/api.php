@@ -42,6 +42,21 @@ Route::middleware(['cors','auth:api'])->prefix('users')->group(function () {
 });
 
 //// FIN ////////////////////////////
+///
+
+
+/////////// GESTION DES GROUPES ///////////////
+Route::middleware(['cors','auth:api'])->prefix('groupes')->group(function () {
+    Route::get('/show/{id}', 'Api\GroupeController@getGroupe');
+    Route::post('/create', 'Api\GroupeController@create');
+    Route::post('/admin/add', 'Api\GroupeController@addAdminGroup');
+    Route::post('/admin/remove', 'Api\GroupeController@removeAdminGroup');
+    Route::post('/member/add', 'Api\GroupeController@addMemberGroup');
+    Route::post('/member/remove', 'Api\GroupeController@removeMemberGroup');
+});
+/////////////////////////////////////////////
+
+
 
 Route::middleware(['cors', 'auth:api'])->group(function () {
     Route::get('logout', 'Api\UserController@logout');
