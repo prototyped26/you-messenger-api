@@ -43,17 +43,23 @@ class GroupeController extends Controller
         try{
 
             $groupe = Groupe::find($id);
-            $groupe["administrateurs"] = $groupe->administrateurs;
-            foreach ($groupe["administrateurs"] as $key => $admin) {
-                $groupe["administrateurs"][$key]["user"] = $admin->user;
-                $groupe["administrateurs"][$key]["groupe"] = $admin->groupe;
+            // $groupe["administrateurs"] = $groupe->administrateurs;
+            $arr = [];
+            foreach ($groupe->administrateurs as $key => $admin) {
+                $arr[] = $admin->user;
+                //$groupe["administrateurs"][$key]["user"] = $admin->user;
+                //$groupe["administrateurs"][$key]["groupe"] = $admin->groupe;
 
             }
-            $groupe["membres"] = $groupe->membres;
-            foreach ($groupe["membres"] as $key => $membre) {
-                $groupe["membres"][$key]["user"] = $membre->user;
+            $groupe["administrators"] = $arr;
+            // $groupe["membres"] = $groupe->membres;
+            $arr = [];
+            foreach ($groupe->membres as $key => $membre) {
+                $arr = $membre->user;
+                //$groupe["membres"][$key]["user"] = $membre->user;
 
             }
+            $groupe["members"] = $arr;
             //$groupe["administrateurs"]["user"] = $groupe->administrateurs->
 
             return response()->json($groupe, 200);
