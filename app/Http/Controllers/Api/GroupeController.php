@@ -83,7 +83,7 @@ class GroupeController extends Controller
             // $groupe["membres"] = $groupe->membres;
             $arr = [];
             foreach ($groupe->membres as $key => $membre) {
-                $arr = $membre->user;
+                $arr[] = $membre->user;
                 //$groupe["membres"][$key]["user"] = $membre->user;
 
             }
