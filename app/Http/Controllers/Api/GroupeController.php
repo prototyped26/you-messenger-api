@@ -27,6 +27,10 @@ class GroupeController extends Controller
             $input = ['user_id' => $groupe->user_id, 'groupe_id' => $groupe->id];
 
             $admin = Administrateur::create($input);
+            $mem = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $input['user_id'])->get();
+            if (!(sizeof($mem) > 0)) {
+                $membre = Membre::create($input);
+            }
 
             return response()->json($groupe, 200);
         }catch (QueryException $e) {
@@ -103,6 +107,11 @@ class GroupeController extends Controller
             $input = $request->all(['groupe_id', 'user_id']);
 
             $admin = Administrateur::create($input);
+
+            $mem = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $input['user_id'])->get();
+            if (!(sizeof($mem) > 0)) {
+                $membre = Membre::create($input);
+            }
 
             return response()->json($admin, 200);
         }catch (QueryException $e) {
