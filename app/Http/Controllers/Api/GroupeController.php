@@ -186,7 +186,7 @@ class GroupeController extends Controller
             $input = $request->all(['groupe_id', 'user_id', 'telephone']);
 
             if ($input['user_id'] == 0) {
-                $mem = Membre::where('telephone', '=', $input['telephone'])->get();
+                $mem = User::where('telephone', '=', $input['telephone'])->get();
                 if (sizeof($mem)) {
                     $array = [
                         'groupe_id' => $input['groupe_id'],
