@@ -44,7 +44,7 @@ class Membre extends Eloquent
 
 	public function user()
 	{
-		return $this->belongsTo(\App\Models\UserOld::class);
+		return $this->belongsTo(\App\Models\UserOld::class)->distinct();
 	}
 
 	public function messages()
