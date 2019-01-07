@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Administrateur;
 use App\Models\Groupe;
 use App\Models\Membre;
+use App\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -100,16 +101,38 @@ class GroupeController extends Controller
 
     public function addAdminGroup(Request $request) {
         $request->validate([
-            'groupe_id' => 'required',
-            'user_id' => 'required'
+            'groupe_id' => 'required'
         ]);
+
         try{
-            $input = $request->all(['groupe_id', 'user_id']);
+            $input = $request->all(['groupe_id', 'user_id', 'telephone']);
 
-            $admin = Administrateur::create($input);
+            $mem = new User();
 
-            $mem = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $input['user_id'])->get();
-            if (!(sizeof($mem) > 0)) {
+            if ($input['user_id'] == 0) {
+                $mem = User::where('telephone', '=', $input['telephone'])->get();
+                if (sizeof($mem)) {
+                    $array = [
+                        'groupe_id' => $input['groupe_id'],
+                        'user_id' => $mem[0]->id
+                    ];
+                    $admin = Administrateur::create($array);
+                } else {
+                    return response()->json("Erreur de données", 400);
+                }
+            } else {
+                $array = [
+                    'groupe_id' => $input['groupe_id'],
+                    'user_id' => $input['user_id']
+                ];
+                $admin = Administrateur::create($array);
+            }
+
+
+
+            $m = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $mem[0]->id)->get();
+            if (!(sizeof($m) > 0)) {
+                $input = ['groupe' => $input['groupe_id'], 'user_id' => $mem[0]->id];
                 $membre = Membre::create($input);
             }
 
@@ -156,12 +179,30 @@ class GroupeController extends Controller
     public function addMemberGroup(Request $request) {
         $request->validate([
             'groupe_id' => 'required',
-            'user_id' => 'required'
         ]);
-        try{
-            $input = $request->all(['groupe_id', 'user_id']);
 
-            $member = Membre::create($input);
+        try{
+
+            $input = $request->all(['groupe_id', 'user_id', 'telephone']);
+
+            if ($input['user_id'] == 0) {
+                $mem = Membre::where('telephone', '=', $input['telephone'])->get();
+                if (sizeof($mem)) {
+                    $array = [
+                        'groupe_id' => $input['groupe_id'],
+                        'user_id' => $mem[0]->id
+                    ];
+                    $member = Membre::create($array);
+                } else {
+                    return response()->json("Erreur de données", 400);
+                }
+            } else {
+                $array = [
+                    'groupe_id' => $input['groupe_id'],
+                    'user_id' => $input['user_id']
+                ];
+                $member = Membre::create($array);
+            }
 
             return response()->json($member, 200);
         }catch (QueryException $e) {
