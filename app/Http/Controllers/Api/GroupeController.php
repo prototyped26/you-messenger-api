@@ -38,6 +38,29 @@ class GroupeController extends Controller
         }
     }
 
+    public function updateGroupe(Request $request, $id) {
+        $request->validate([
+            'label' => 'required',
+            'user_id' => 'required'
+        ]);
+
+        $groupe = new Groupe();
+        try{
+            $input = $request->all(['label', 'photo', 'description', 'note', 'user_id']);
+
+            Groupe::where('id', '=', $id)->update($input);
+            $groupe = Groupe::find($id);
+
+            return response()->json($groupe, 200);
+        }catch (QueryException $e) {
+            $messageError = '';
+            $messageError = $e->getMessage();
+            return response()->json($messageError, 400);
+
+            return response()->json($messageError, 500);
+        }
+    }
+
     public function getGroupe(Request $request, $id) {
         $groupe = new Groupe();
         try{
