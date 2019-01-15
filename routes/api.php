@@ -49,7 +49,7 @@ Route::middleware(['cors','auth:api'])->prefix('users')->group(function () {
 Route::middleware(['cors','auth:api'])->prefix('groupes')->group(function () {
     Route::get('/show/{id}', 'Api\GroupeController@getGroupe');
     Route::post('/create', 'Api\GroupeController@create');
-    Route::post('/update', 'Api\GroupeController@updateGroupe');
+    Route::post('/update/{id}', 'Api\GroupeController@updateGroupe');
     Route::post('/admin/add', 'Api\GroupeController@addAdminGroup');
     Route::post('/admin/remove', 'Api\GroupeController@removeAdminGroup');
     Route::post('/member/add', 'Api\GroupeController@addMemberGroup');
