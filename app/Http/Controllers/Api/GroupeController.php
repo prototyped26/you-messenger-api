@@ -103,6 +103,7 @@ class GroupeController extends Controller
         $request->validate([
             'groupe_id' => 'required'
         ]);
+        $userId = null;
 
         try{
             $input = $request->all(['groupe_id', 'user_id', 'telephone']);
@@ -111,28 +112,32 @@ class GroupeController extends Controller
 
             if ($input['user_id'] == 0) {
                 $mem = User::where('telephone', '=', $input['telephone'])->get();
-                if (sizeof($mem)) {
+               
+                if (sizeof($mem) > 0) {
+                    $userId = $mem[0]->id;
                     $array = [
                         'groupe_id' => $input['groupe_id'],
-                        'user_id' => $mem[0]->id
+                        'user_id' => $userId
                     ];
                     $admin = Administrateur::create($array);
                 } else {
                     return response()->json("Erreur de données", 400);
                 }
             } else {
+                $userId = $input['user_id'];
+
                 $array = [
                     'groupe_id' => $input['groupe_id'],
-                    'user_id' => $input['user_id']
+                    'user_id' => $userId
                 ];
                 $admin = Administrateur::create($array);
             }
 
 
 
-            $m = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $mem[0]->id)->get();
+            $m = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $userId)->get();
             if (!(sizeof($m) > 0)) {
-                $input = ['groupe' => $input['groupe_id'], 'user_id' => $mem[0]->id];
+                $input = ['groupe' => $input['groupe_id'], 'user_id' => $userId];
                 $membre = Membre::create($input);
             }
 
@@ -148,26 +153,32 @@ class GroupeController extends Controller
 
     public function removeAdminGroup(Request $request) {
         $request->validate([
-            'groupe_id' => 'required',
-            'user_id' => 'required'
+            'groupe_id' => 'required'
         ]);
+        $userId = null;
         try{
-            $input = $request->all(['groupe_id', 'user_id']);
+            $input = $request->all(['groupe_id', 'user_id', 'telephone']);
 
-            $admin = Administrateur::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $input['user_id'])->get();
+            $mem = User::where('telephone', '=', $input['telephone'])->get();
 
-            if (sizeof($admin) > 0) {
+            if (sizeof($mem)) {
+                $userId = $mem[0]->id;
 
-                Administrateur::destroy($admin[0]->id);
-                return response()->json("Opération ok", 200);
+                $admin = Administrateur::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $userId)->get();
 
+                if (sizeof($admin) > 0) {
+
+                    Administrateur::destroy($admin[0]->id);
+                    return response()->json("Opération ok", 200);
+
+                } else {
+                    return response()->json("L'administrateur n'existe pas !", 400);
+                }
             } else {
-                return response()->json("L'administrateur n'existe pas !", 400);
+                return response()->json("Erreur de données", 400);
             }
 
-            $admin = Administrateur::create($input);
 
-            return response()->json($admin, 200);
         }catch (QueryException $e) {
             $messageError = '';
             $messageError = $e->getMessage();
@@ -181,6 +192,8 @@ class GroupeController extends Controller
             'groupe_id' => 'required',
         ]);
 
+        $userId = null;
+
         try{
 
             $input = $request->all(['groupe_id', 'user_id', 'telephone']);
@@ -188,18 +201,24 @@ class GroupeController extends Controller
             if ($input['user_id'] == 0) {
                 $mem = User::where('telephone', '=', $input['telephone'])->get();
                 if (sizeof($mem)) {
+
+                    $userId = $mem[0]->id;
+
                     $array = [
                         'groupe_id' => $input['groupe_id'],
-                        'user_id' => $mem[0]->id
+                        'user_id' => $userId
                     ];
                     $member = Membre::create($array);
                 } else {
                     return response()->json("Erreur de données", 400);
                 }
             } else {
+
+                $userId = $input['user_id'];
+
                 $array = [
                     'groupe_id' => $input['groupe_id'],
-                    'user_id' => $input['user_id']
+                    'user_id' => $userId
                 ];
                 $member = Membre::create($array);
             }
@@ -216,24 +235,37 @@ class GroupeController extends Controller
 
     public function removeMemberGroup(Request $request) {
         $request->validate([
-            'groupe_id' => 'required',
-            'user_id' => 'required'
+            'groupe_id' => 'required'
         ]);
+
+        $userId = null;
+
         try{
-            $input = $request->all(['groupe_id', 'user_id']);
+            $input = $request->all(['groupe_id', 'user_id', 'telephone']);
 
-            $member = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $input['user_id'])->get();
+            $mem = User::where('telephone', '=', $input['telephone'])->get();
+            if (sizeof($mem)) {
 
-            if (sizeof($member) > 0) {
+                $userId = $mem[0]->id;
 
-                Membre::destroy($member[0]->id);
-                return response()->json("Opération ok", 200);
+                $array = [
+                    'groupe_id' => $input['groupe_id'],
+                    'user_id' => $userId
+                ];
 
+                $member = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $userId)->get();
+
+                if (sizeof($member) > 0) {
+
+                    Membre::destroy($member[0]->id);
+                    return response()->json("Opération ok", 200);
+
+                } else {
+                    return response()->json("Le membre ou le groupe n'existe pas !", 400);
+                }
             } else {
-                return response()->json("Le membre ou le groupe n'existe pas !", 400);
+                return response()->json("Erreur de données", 400);
             }
-
-            $admin = Administrateur::create($input);
 
             return response()->json($admin, 200);
         }catch (QueryException $e) {
