@@ -18,6 +18,7 @@ class UserFileController extends Controller
         $base64Image = $input['file'];
         $format = $input['format'];
         $type = $input['type'];
+        $name = $input['name'];
 
         //$filename =  Str::random(60) .'.'. ($type == 'image' ? 'jpg' :  $format);
         $label = "" . Str::random(60);
@@ -63,7 +64,13 @@ class UserFileController extends Controller
             file_put_contents('' . $localPaht ,$decoded_image);
             //Storage::put('' .$fileInput , $contents);
 
-            $fichier = new Fichier(['type' => $type, 'url' => $fileInput, 'nom' => $filename]);
+            $fichier = new Fichier([
+                'type' => $type,
+                'url' => $fileInput,
+                'nom' => $filename,
+                'real_name' => $name
+            ]);
+
             $fichier->save();
 
             // compress images
@@ -83,7 +90,8 @@ class UserFileController extends Controller
                 'success'=> [
                     'file_name' => $filename,
                     'path' =>  asset(''.$fileInput),
-                    'compress_file' => asset( ''. $filename_compress)
+                    'compress_file' => asset( ''. $filename_compress),
+                    'real_name' => $name
                 ]
             ], 200);
         } catch (\Exception $e) {

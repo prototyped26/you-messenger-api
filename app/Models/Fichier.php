@@ -35,7 +35,8 @@ class Fichier extends Eloquent
 	protected $fillable = [
 		'url',
 		'type',
-        'nom'
+        'nom',
+        'real_name'
 	];
 
 	public function piece_jointes()
