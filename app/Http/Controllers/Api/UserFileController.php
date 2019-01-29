@@ -111,6 +111,6 @@ class UserFileController extends Controller
         imagecopyresampled($dst, $im, 0, 0, 0, 0, $width, $height, $oldWidth, $oldHeight);
         imagedestroy($im);
 
-        imagepng($dst, "".$fileName, 9);
+        imagepng($dst, "".$fileName, 9, PNG_ALL_FILTERS);
     }
 }
