@@ -22,7 +22,7 @@ class UserFileController extends Controller
         //$filename =  Str::random(60) .'.'. ($type == 'image' ? 'jpg' :  $format);
         $label = "" . Str::random(60);
         $filename =  $label .'.'.  $format;
-        $filename_compress =  $label .'_blur.'.  $format;
+        $filename_compress =  $label .'_blur.jpeg';
 
         //$encoded_image = explode(",", $base64Image)[1];
         $encoded_image = $base64Image;
@@ -97,8 +97,8 @@ class UserFileController extends Controller
 
     public function compressFile($fileName, $base64image) {
 
-        $height = 50;
-        $width = 50;
+        $height = 120;
+        $width = 120;
 
         $decode_image = base64_decode($base64image);
 
@@ -111,6 +111,6 @@ class UserFileController extends Controller
         imagecopyresampled($dst, $im, 0, 0, 0, 0, $width, $height, $oldWidth, $oldHeight);
         imagedestroy($im);
 
-        imagepng($dst, "".$fileName, 0, PNG_ALL_FILTERS);
+        imagejpeg($dst, "".$fileName, 20);
     }
 }
