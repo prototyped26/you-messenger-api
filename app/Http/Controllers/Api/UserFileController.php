@@ -112,6 +112,6 @@ class UserFileController extends Controller
         imagedestroy($im);
 
 
-        imagepnng($dst);
+        imagepnng($dst, null, 9);
     }
 }
