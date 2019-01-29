@@ -97,8 +97,8 @@ class UserFileController extends Controller
 
     public function compressFile($fileName, $base64image) {
 
-        $height = 120;
-        $width = 120;
+        $height = 250;
+        $width = 220;
 
         $decode_image = base64_decode($base64image);
 
@@ -111,6 +111,6 @@ class UserFileController extends Controller
         imagecopyresampled($dst, $im, 0, 0, 0, 0, $width, $height, $oldWidth, $oldHeight);
         imagedestroy($im);
 
-        imagejpeg($dst, "".$fileName, 20);
+        imagejpeg($dst, "".$fileName, 10);
     }
 }
