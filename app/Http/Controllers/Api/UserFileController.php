@@ -83,7 +83,7 @@ class UserFileController extends Controller
                 'success'=> [
                     'file_name' => $filename,
                     'path' =>  asset(''.$fileInput),
-                    'compress_file' => $filename_compress
+                    'compress_file' => asset( ''. $filename_compress)
                 ]
             ], 200);
         } catch (\Exception $e) {
@@ -97,8 +97,8 @@ class UserFileController extends Controller
 
     public function compressFile($fileName, $base64image) {
 
-        $height = 175;
-        $width = 175;
+        $height = 50;
+        $width = 50;
 
         $decode_image = base64_decode($base64image);
 
