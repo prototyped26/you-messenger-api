@@ -20,7 +20,9 @@ class UserFileController extends Controller
         $type = $input['type'];
 
         //$filename =  Str::random(60) .'.'. ($type == 'image' ? 'jpg' :  $format);
-        $filename =  Str::random(60) .'.'.  $format;
+        $label = "" . Str::random(60);
+        $filename =  $label .'.'.  $format;
+        $filename_compress =  $label .'_blur.'.  $format;
 
         //$encoded_image = explode(",", $base64Image)[1];
         $encoded_image = $base64Image;
@@ -31,6 +33,7 @@ class UserFileController extends Controller
             switch ($type) {
                 case 'image' :
                     $fileInput = "data/images/".$filename;
+                    $filename_compress = "data/images/".$filename_compress;
                     break;
                 case 'video':
                     $fileInput = "data/videos/".$filename;
@@ -43,9 +46,11 @@ class UserFileController extends Controller
                     break;
                 case 'profile':
                     $fileInput = "data/images/".$filename;
+                    $filename_compress = "data/images/".$filename_compress;
                     break;
                 default:
                     $fileInput = "data/images/".$filename;
+                    $filename_compress = "data/images/".$filename_compress;
             }
 
             //$localPaht = asset($fileInput);
@@ -61,6 +66,13 @@ class UserFileController extends Controller
             $fichier = new Fichier(['type' => $type, 'url' => $fileInput, 'nom' => $filename]);
             $fichier->save();
 
+            // compress images
+            if ($type == "image" || $type == "profile") {
+                $this->compressFile($filename_compress, $base64Image);
+            } else {
+                $filename_compress = null;
+            }
+
             if ($type == 'profile') {
                $user = $request->user();
                $user->photo = asset(''.$fileInput);
@@ -70,7 +82,8 @@ class UserFileController extends Controller
             return response()->json([
                 'success'=> [
                     'file_name' => $filename,
-                    'path' =>  asset(''.$fileInput)
+                    'path' =>  asset(''.$fileInput),
+                    'compress_file' => $filename_compress
                 ]
             ], 200);
         } catch (\Exception $e) {
@@ -80,5 +93,25 @@ class UserFileController extends Controller
 
         return response()->json(['error'=> 'An error has occurred'], 400);
 
+    }
+
+    public function compressFile($fileName, $base64image) {
+
+        $height = 50;
+        $width = 50;
+
+        $decode_image = base64_decode($base64image);
+
+        $im = imagecreatefromstring($decode_image);
+
+        $oldWidth = imagesx($im);
+        $oldHeight = imagesy($im);
+
+        $dst = imagecreatetruecolor($width, $height);
+        imagecopyresampled($dst, $im, 0, 0, 0, 0, $width, $height, $oldWidth, $oldHeight);
+        imagedestroy($im);
+
+
+        imagepnng($dst);
     }
 }
