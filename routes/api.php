@@ -31,7 +31,7 @@ Route::middleware(['cors','auth:api'])->prefix('messages')->group(function () {
 });
 Route::middleware(['cors'])->prefix('messages')->group(function () {
     Route::post('/save-one/{telephone}', 'Api\MessageController@storeOne');
-    Route::post('/not_read/{telephone}', 'Api\MessageController@getNotRead');
+    Route::post('/not-read/{telephone}', 'Api\MessageController@getNotRead');
 });
 /// les méthodes utilisateurs
 Route::middleware(['cors'])->prefix('account')->group(function () {
