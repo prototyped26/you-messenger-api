@@ -21,7 +21,9 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
  * @property int $is_valid
+ * @property int $is_connected
  * @property string $id_message
+ * @property string $operation
  * 
  * @property \App\Models\Administrateur $administrateur
  * @property \App\Models\Membre $membre
@@ -41,6 +43,7 @@ class Message extends Eloquent
 		'groupe_id' => 'int',
 		'is_send' => 'int',
 		'is_valid' => 'int',
+        'is_connected' => 'int',
 	];
 
 	protected $fillable = [
@@ -50,7 +53,9 @@ class Message extends Eloquent
 		'is_send',
 		'is_valid',
 		'groupe_id',
-        'date'
+        'date',
+        'is_connected',
+        'operation'
 	];
 
 

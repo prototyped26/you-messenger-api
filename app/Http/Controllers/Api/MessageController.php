@@ -32,7 +32,7 @@ class MessageController extends Controller
 
             try {
 
-                $input = $request->all(['label', 'user_id', 'is_valid', 'date', 'is_send', 'id_message', 'groupe_id']);
+                $input = $request->all(['label', 'user_id', 'is_valid', 'date', 'is_send', 'id_message', 'groupe_id', 'is_connected', 'operation']);
 
                 $input['user_id'] = $findUser[0]->id;
 
@@ -40,6 +40,45 @@ class MessageController extends Controller
                 $message->save();
 
                 return response()->json($message, 200);
+
+            } catch (QueryException $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
+
+
+        } else {
+            return response()->json(['error' => "L'utilisateur n'existe pas"], 400);
+        }
+    }
+
+    public function getNotRead(Request $request, $telephone) {
+
+        $findUser = User::where("telephone", "=", $telephone)->get();
+
+        if (sizeof($findUser) > 0 ) {
+
+            try {
+
+                $messages = Message::where("user_id", "=", $findUser[0]->id)
+                                    ->where("is_connected", "=", false)
+                                    ->orderBy("id", "DESC")
+                                    ->get();
+
+
+                if (sizeof($messages) > 0) {
+                    $liste = [];
+
+                    foreach ($messages as $message) {
+                        $liste[] = $message->label;
+                        $message->is_connected = true;
+                        $message->operation = "récupération des messages après connexion !";
+                        $message->save();
+                    }
+
+                    return response()->json($liste, 200);
+                }
+
+                return response()->json([], 200);
 
             } catch (QueryException $e) {
                 return response()->json(['error' => $e->getMessage()], 400);
