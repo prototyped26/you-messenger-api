@@ -29,6 +29,9 @@ Route::middleware(['cors','auth:api'])->prefix('information')->group(function ()
 Route::middleware(['cors','auth:api'])->prefix('messages')->group(function () {
     Route::post('/send', 'Api\MessageController@store');
 });
+Route::middleware(['cors'])->prefix('messages')->group(function () {
+    Route::post('/save-one/{telephone}', 'Api\MessageController@storeOne');
+});
 /// les méthodes utilisateurs
 Route::middleware(['cors'])->prefix('account')->group(function () {
     Route::post('/login', 'Api\UserController@login');
@@ -43,7 +46,27 @@ Route::middleware(['cors','auth:api'])->prefix('users')->group(function () {
 
 //// FIN ////////////////////////////
 ///
+///
 
+////////////// GESTION DES CONTACTS DES UTILISATEURS ///////////////
+
+Route::middleware(['cors','auth:api'])->prefix('contacts')->group(function () {
+    Route::get('/list', 'Api\ContactController@list');
+    Route::post('/one', 'Api\ContactController@storeOne');
+    Route::post('/many', 'Api\ContactController@storeMany');
+});
+
+/// //////////////////   FIN     ////////////////////////////
+
+
+////////////// GESTION DES NOTIFICATIONS ///////////////
+
+Route::middleware(['cors'])->prefix('notifications')->group(function () {
+    Route::get('/get/{telephone}', 'Api\NotificationController@getNotif');
+    Route::post('/save/{telephone}', 'Api\NotificationController@store');
+});
+
+/// //////////////////   FIN     ////////////////////////////
 
 /////////// GESTION DES GROUPES ///////////////
 Route::middleware(['cors','auth:api'])->prefix('groupes')->group(function () {

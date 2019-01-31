@@ -15,13 +15,13 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $id
  * @property string $label
  * @property int $user_id
- * @property int $user_id1
- * @property int $membre_id
+ * @property int $groupe_id
+ * @property int $is_send
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
  * @property int $is_valid
- * @property int $administrateur_id
+ * @property string $id_message
  * 
  * @property \App\Models\Administrateur $administrateur
  * @property \App\Models\Membre $membre
@@ -38,29 +38,25 @@ class Message extends Eloquent
 
 	protected $casts = [
 		'user_id' => 'int',
-		'user_id1' => 'int',
-		'membre_id' => 'int',
+		'groupe_id' => 'int',
+		'is_send' => 'int',
 		'is_valid' => 'int',
-		'administrateur_id' => 'int'
 	];
 
 	protected $fillable = [
 		'label',
 		'user_id',
-		'user_id1',
-		'membre_id',
+		'id_message',
+		'is_send',
 		'is_valid',
-		'administrateur_id'
+		'groupe_id',
+        'date'
 	];
 
-	public function administrateur()
-	{
-		return $this->belongsTo(\App\Models\Administrateur::class);
-	}
 
-	public function membre()
+	public function grupe()
 	{
-		return $this->belongsTo(\App\Models\Membre::class);
+		return $this->belongsTo(\App\Models\Groupe::class);
 	}
 
 	public function user()

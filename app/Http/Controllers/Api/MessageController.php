@@ -23,6 +23,33 @@ class MessageController extends Controller
         }
     }
 
+    public function storeOne(Request $request, $telephone) {
+
+        $findUser = User::where("telephone", "=", $telephone)->get();
+
+        if (sizeof($findUser) > 0 ) {
+
+            try {
+
+                $input = $request->all(['label', 'user_id', 'is_valid', 'date', 'is_send', 'id_message', 'groupe_id']);
+
+                $input['user_id'] = $findUser[0]->id;
+
+                $message = new Message($input);
+                $message->save();
+
+                return response()->json($message, 200);
+
+            } catch (QueryException $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
+
+
+        } else {
+            return response()->json(['error' => "L'utilisateur n'existe pas"], 400);
+        }
+    }
+
     public function store(Request $request) {
         $current = $request->user();
         $request->validate([
