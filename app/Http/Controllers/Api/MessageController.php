@@ -61,7 +61,7 @@ class MessageController extends Controller
 
                 $messages = Message::where("user_id", "=", $findUser[0]->id)
                                     ->where("is_connected", "=", false)
-                                    ->orderBy("id", "DESC")
+                                    ->orderBy("id", "ASC")
                                     ->get();
 
 
