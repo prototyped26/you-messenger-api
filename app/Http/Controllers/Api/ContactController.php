@@ -23,6 +23,7 @@ class ContactController extends Controller
     }
 
     public function storeOne(Request $request) {
+        $current = $request->user();
         $request->validate([
             'telephone' => 'required',
             'user_id' => 'required'
@@ -45,12 +46,16 @@ class ContactController extends Controller
     }
 
     public function storeMany(Request $request) {
-
+        $current = $request->user();
         $contacts = $request->input('contacts');
+
+        $operations = [];
 
         try {
 
             foreach ($contacts as $key => $input) {
+
+                $input['user_id'] = $current->id;
 
                 try {
 
@@ -58,16 +63,18 @@ class ContactController extends Controller
                     $contact->save();
 
                     $contacts[$key] =  ["operation" => true ];
+                    $operations[] = "ok";
                 } catch (QueryException $e) {
                     $contacts[$key] =  [
                         "operation" => false,
                         "raison" => $e->getMessage()
                     ];
+                    $operations[] = $e->getMessage();
                 }
 
             }
 
-            return response()->json($contacts, 200);
+            return response()->json($operations, 200);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
