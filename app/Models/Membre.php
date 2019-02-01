@@ -31,6 +31,7 @@ class Membre extends Eloquent
 	protected $casts = [
 		'groupe_id' => 'int',
 		'user_id' => 'int',
+        'is_blocked' => 'bool'
 	];
 
 	protected $fillable = [
