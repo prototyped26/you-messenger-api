@@ -99,7 +99,7 @@ class MessageController extends Controller
 
             try {
 
-                $input = $request->all(['label', 'user_id', 'read']);
+                $input = $request->all(['label', 'user_id', 'read', 'id_message', 'complete']);
 
                 $input['user_id'] = $findUser[0]->id;
 
@@ -160,13 +160,14 @@ class MessageController extends Controller
     public function updateActualites(Request $request, $id) {
 
         $findNotifs= Notification::where("id_message", "=", $id)->get();
-
+        $input = $request->all(['label', 'user_id', 'read']);
         try {
 
             if (sizeof($findNotifs) > 0) {
                 $liste = [];
 
                 foreach ($findNotifs as $notification) {
+                    $notification->label = $input['label'];
                     $notification->complete = true;
                     $notification->save();
                 }
