@@ -15,7 +15,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $id
  * @property int $groupe_id
  * @property int $user_id
- * @property int $is_blocked
+ * @property boolean $is_blocked
  * 
  * @property \App\Models\Groupe $groupe
  * @property \App\Models\UserOld $user
@@ -31,7 +31,6 @@ class Membre extends Eloquent
 	protected $casts = [
 		'groupe_id' => 'int',
 		'user_id' => 'int',
-        'is_blocked' => 'int'
 	];
 
 	protected $fillable = [
