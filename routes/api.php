@@ -34,6 +34,7 @@ Route::middleware(['cors'])->prefix('messages')->group(function () {
     Route::get('/not-read/{telephone}', 'Api\MessageController@getNotRead');
     Route::post('/save-notification/{telephone}', 'Api\MessageController@storeActualite');
     Route::get('/read-notification/{telephone}', 'Api\MessageController@getNotReadActualite');
+    Route::get('/complete-notifications/{id}', 'Api\MessageController@updateActualites');
 });
 /// les méthodes utilisateurs
 Route::middleware(['cors'])->prefix('account')->group(function () {

@@ -18,13 +18,16 @@ class Notification extends Eloquent
 
     protected $casts = [
         'user_id' => 'int',
-        'read' => 'bool'
+        'read' => 'bool',
+        'complete' => 'bool'
     ];
 
     protected $fillable = [
         'label',
         'read',
-        'user_id'
+        'user_id',
+        'complete',
+        'id_message'
     ];
 
     public function user()

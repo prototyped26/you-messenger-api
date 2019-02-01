@@ -156,6 +156,32 @@ class MessageController extends Controller
         }
     }
 
+
+    public function updateActualites(Request $request, $id) {
+
+        $findNotifs= Notification::where("id_message", "=", $id)->get();
+
+        try {
+
+            if (sizeof($findNotifs) > 0) {
+                $liste = [];
+
+                foreach ($findNotifs as $notification) {
+                    $notification->complete = true;
+                    $notification->save();
+                }
+
+                return response()->json($liste, 200);
+            }
+
+            return response()->json([], 200);
+
+        } catch (QueryException $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+
     public function store(Request $request) {
         $current = $request->user();
         $request->validate([
