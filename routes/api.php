@@ -77,6 +77,7 @@ Route::middleware(['cors','auth:api'])->prefix('groupes')->group(function () {
     Route::post('/admin/add', 'Api\GroupeController@addAdminGroup');
     Route::post('/admin/remove', 'Api\GroupeController@removeAdminGroup');
     Route::post('/member/add', 'Api\GroupeController@addMemberGroup');
+    Route::post('/member/update', 'Api\GroupeController@updateMemberGroup');
     Route::post('/member/remove', 'Api\GroupeController@removeMemberGroup');
 });
 /////////////////////////////////////////////

@@ -235,6 +235,51 @@ class GroupeController extends Controller
         return response()->json($messageError, 500);
     }
 
+    public function updateMemberGroup(Request $request) {
+        $request->validate([
+            'groupe_id' => 'required'
+        ]);
+
+        $userId = null;
+
+        try{
+            $input = $request->all(['groupe_id', 'user_id', 'telephone', 'is_blocked']);
+
+            $mem = User::where('telephone', '=', $input['telephone'])->get();
+            if (sizeof($mem)) {
+
+                $userId = $mem[0]->id;
+
+                $array = [
+                    'groupe_id' => $input['groupe_id'],
+                    'user_id' => $userId
+                ];
+
+                $member = Membre::where('groupe_id', '=', $input['groupe_id'])->where('user_id', '=', $userId)->get();
+
+                if (sizeof($member) > 0) {
+
+                    $member->is_blocked = $input['is_blocked'];
+                    $member->save();
+
+                    return response()->json($member, 200);
+
+                } else {
+                    return response()->json("Le membre ou le groupe n'existe pas !", 400);
+                }
+            } else {
+                return response()->json("Erreur de données", 400);
+            }
+
+            return response()->json($admin, 200);
+        }catch (QueryException $e) {
+            $messageError = '';
+            $messageError = $e->getMessage();
+            return response()->json($messageError, 400);
+        }
+        return response()->json($messageError, 500);
+    }
+
     public function removeMemberGroup(Request $request) {
         $request->validate([
             'groupe_id' => 'required'
