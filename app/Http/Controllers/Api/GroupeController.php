@@ -259,10 +259,10 @@ class GroupeController extends Controller
 
                 if (sizeof($member) > 0) {
 
-                    $member->is_blocked = $input['is_blocked'];
-                    $member->save();
+                    $member[0]->is_blocked = $input['is_blocked'];
+                    $member[0]->save();
 
-                    return response()->json($member, 200);
+                    return response()->json($member[0], 200);
 
                 } else {
                     return response()->json("Le membre ou le groupe n'existe pas !", 400);
