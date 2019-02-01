@@ -59,11 +59,20 @@ class ContactController extends Controller
 
                 try {
 
-                    $contact = new Contact($input);
-                    $contact->save();
+                    $find = Contact::where("telephone", "=", $input['telephone'])
+                                    ->where("user_id", "=", $input['user_id'])
+                                    ->get();
 
-                    $contacts[$key] =  ["operation" => true ];
-                    $operations[] = "ok";
+                    if (sizeof($find) == 0) {
+                        $contact = new Contact($input);
+                        $contact->save();
+
+                        $contacts[$key] =  ["operation" => true ];
+                        $operations[] = "ok";
+                    } else {
+                        $operations[] = "existant";
+                    }
+
                 } catch (QueryException $e) {
                     $contacts[$key] =  [
                         "operation" => false,
