@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Message;
+use App\Models\Notification;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -73,6 +74,71 @@ class MessageController extends Controller
                         $message->is_connected = true;
                         $message->operation = "récupération des messages après connexion !";
                         $message->save();
+                    }
+
+                    return response()->json($liste, 200);
+                }
+
+                return response()->json([], 200);
+
+            } catch (QueryException $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
+
+
+        } else {
+            return response()->json(['error' => "L'utilisateur n'existe pas"], 400);
+        }
+    }
+
+    public function storeActualite(Request $request, $telephone) {
+
+        $findUser = User::where("telephone", "=", $telephone)->get();
+
+        if (sizeof($findUser) > 0 ) {
+
+            try {
+
+                $input = $request->all(['label', 'user_id', 'read']);
+
+                $input['user_id'] = $findUser[0]->id;
+
+                $notification = new Notification($input);
+                $notification->save();
+
+                return response()->json($notification, 200);
+
+            } catch (QueryException $e) {
+                return response()->json(['error' => $e->getMessage()], 400);
+            }
+
+
+        } else {
+            return response()->json(['error' => "L'utilisateur n'existe pas"], 400);
+        }
+    }
+
+    public function getNotReadActualite(Request $request, $telephone) {
+
+        $findUser = User::where("telephone", "=", $telephone)->get();
+
+        if (sizeof($findUser) > 0 ) {
+
+            try {
+
+                $notifications = Notification::where("user_id", "=", $findUser[0]->id)
+                    ->where("read", "=", false)
+                    ->orderBy("id", "ASC")
+                    ->get();
+
+
+                if (sizeof($notifications) > 0) {
+                    $liste = [];
+
+                    foreach ($notifications as $notification) {
+                        $liste[] = $notification->label;
+                        $notification->read = true;
+                        $notification->save();
                     }
 
                     return response()->json($liste, 200);

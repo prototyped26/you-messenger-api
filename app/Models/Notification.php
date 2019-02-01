@@ -16,6 +16,11 @@ class Notification extends Eloquent
     use \Illuminate\Database\Eloquent\SoftDeletes;
     protected $table = 'notification';
 
+    protected $casts = [
+        'user_id' => 'int',
+        'read' => 'bool'
+    ];
+
     protected $fillable = [
         'label',
         'read',
